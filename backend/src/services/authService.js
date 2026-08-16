@@ -56,3 +56,36 @@ export const registerUser = async ({ name, email, password, confirmPassword }) =
 		token
 	};
 }
+
+export const loginUser = async ({ email, password }) => {
+	if (!email || !password) {
+		throw new AppError("All fields are required", 400);
+	}
+
+	const normalizedEmail = email.trim().toLowerCase();
+	const existingUser = await prisma.user.findUnique({
+		where: {
+			email: normalizedEmail
+		}
+	})
+	if (!existingUser) {
+		throw new AppError("Invalid credentials", 400);
+	}
+
+	const match = await bcrypt.compare(password, existingUser.password);
+	if (!match) {
+		throw new AppError("Invalid credentials", 400);
+	}
+
+	const token = generateToken(existingUser.id);
+	const user = {
+		id: existingUser.id,
+		name: existingUser.name,
+		email: existingUser.email
+	}
+
+	return {
+		user,
+		token
+	};
+}
