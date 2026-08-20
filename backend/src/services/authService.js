@@ -10,7 +10,7 @@ export const registerUser = async ({ name, email, password, confirmPassword }) =
 		throw new AppError("All fields are required", 400);
 	}
 	if (name.length > 100) {
-		throw new AppError("user name too long - max 100 characters", 400);
+		throw new AppError("User name is too long (max 100 characters)", 400);
 	}
 	if(!EMAIL_REGEX.test(email)) {
 		throw new AppError("Invalid email format", 400);
