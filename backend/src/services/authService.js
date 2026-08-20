@@ -1,5 +1,5 @@
 import { AppError } from "../utils/AppError.js";
-import { generateToken } from "../utils/jwt.js";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/jwt.js";
 import prisma from "../db/prisma.js";
 import bcrypt from "bcrypt";
 
@@ -49,11 +49,13 @@ export const registerUser = async ({ name, email, password, confirmPassword }) =
 		}
 	});
 
-	const token = generateToken(user.id);
+	const accessToken = generateAccessToken(user.id);
+	const refreshToken = generateRefreshToken(user.id);
 
 	return {
 		user,
-		token
+		accessToken,
+		refreshToken
 	};
 }
 
@@ -77,7 +79,8 @@ export const loginUser = async ({ email, password }) => {
 		throw new AppError("Invalid credentials", 400);
 	}
 
-	const token = generateToken(existingUser.id);
+	const accessToken = generateAccessToken(existingUser.id);
+	const refreshToken = generateRefreshToken(existingUser.id);
 	const user = {
 		id: existingUser.id,
 		name: existingUser.name,
@@ -86,6 +89,39 @@ export const loginUser = async ({ email, password }) => {
 
 	return {
 		user,
-		token
+		accessToken,
+		refreshToken
 	};
+}
+
+export const createNewAccessToken = (token) => {
+
+	try {
+		const decoded = verifyRefreshToken(token);
+		return generateAccessToken(decoded.userId);
+	} catch (error) {
+		throw new AppError("Invalid or expired refresh token", 401);
+	}
+}
+
+export const getUserById = async (id) => {
+	if (!id) {
+		throw new AppError("id missing", 401);
+	}
+	const user = await prisma.user.findUnique({
+		where: {
+			id: id
+		},
+		select: {
+			id: true,
+			name: true,
+			email: true,
+			createdAt: true
+		}
+	});
+	if (!user) {
+		throw new AppError("User not found", 404);
+	}
+
+	return user;
 }
