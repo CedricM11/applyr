@@ -1,4 +1,5 @@
 import express from 'express';
+import "dotenv/config";
 import cookieParser from "cookie-parser";
 import prisma from './db/prisma.js';
 import authRouter from "./routes/authRoutes.js";
