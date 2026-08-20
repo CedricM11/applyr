@@ -71,7 +71,7 @@ export const loginUser = async ({ email, password }) => {
 		}
 	})
 	if (!existingUser) {
-		throw new AppError("Invalid credentials", 400);
+		throw new AppError("Invalid credentials", 401);
 	}
 
 	const match = await bcrypt.compare(password, existingUser.password);
