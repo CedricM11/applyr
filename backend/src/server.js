@@ -3,6 +3,7 @@ import "dotenv/config";
 import cookieParser from "cookie-parser";
 import prisma from './db/prisma.js';
 import authRouter from "./routes/authRoutes.js";
+import applicationRouter from "./routes/applicationRoutes.js"
 import { errorHandler } from './middlewares/errorMiddleware.js';
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
+app.use("/api/application", applicationRouter);
 
 app.use(errorHandler);
 
