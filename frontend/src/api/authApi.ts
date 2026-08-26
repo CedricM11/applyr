@@ -41,3 +41,19 @@ export const register = async (name: string, email: string, password: string, co
 		throw error;
 	}
 }
+
+export const getMe = async () => {
+	try {
+		console.log("send request");
+		const response = await api.get("/auth/me");
+		return response.data;
+
+	} catch (error) {
+		if (isAxiosError(error)) {
+			const message = error.response?.data.message ?? "An unexpected error occurred";
+			throw new Error(message);
+		}
+
+		throw error;
+	}
+}

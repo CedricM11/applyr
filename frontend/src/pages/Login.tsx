@@ -2,19 +2,14 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { login } from "../api/authApi";
 import { toast } from "sonner";
+import { useAuthStore } from "../stores/authStore";
 
 function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const navigate = useNavigate();
+	const setUser = useAuthStore((state) => state.setUser);
 
-	const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEmail(e.target.value);
-	};
-
-	const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setPassword(e.target.value);
-	};
 
 	const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -22,6 +17,7 @@ function Login() {
 		try {
 			const data = await login(email, password);
 			console.log(data);
+			setUser(data.user);
 			toast.success("Logged in successfully")
 			navigate('/');
 		} catch(err) {
@@ -60,7 +56,7 @@ function Login() {
 									className="input w-full"
 									placeholder="you@example.com"
 									value={email}
-									onChange={handleChangeEmail}
+									onChange={(e) => setEmail(e.target.value)}
 								/>
 							</fieldset>
 
@@ -83,7 +79,7 @@ function Login() {
 									className="input w-full"
 									placeholder="••••••••"
 									value={password}
-									onChange={handleChangePassword}
+									onChange={(e) => setPassword(e.target.value)}
 								/>
 							</fieldset>
 

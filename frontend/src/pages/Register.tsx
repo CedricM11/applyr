@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { register } from "../api/authApi";
+import { useAuthStore } from "../stores/authStore";
 
 function Register() {
 
@@ -11,29 +12,21 @@ function Register() {
 	const [confirmPassword, setConfirmPassword] = useState("");
 
 	const navigate = useNavigate();
+	const setUser = useAuthStore((state) => state.setUser);
 
-	const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setName(e.target.value);
-	}
-
-	const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEmail(e.target.value);
-	}
-	
-	const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setPassword(e.target.value);
-	}
-	
-	const handleChangeConfirmPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setConfirmPassword(e.target.value);
-	}
 	
 	const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
+		if (password !== confirmPassword) {
+			toast.error("Passwords do not match");
+			return;
+		}
+
 		try {
 			const data = await register(name, email, password, confirmPassword);
 			console.log(data);
+			setUser(data.user);
 			toast.success("Account successfully created");
 			navigate("/");
 		} catch (error) {
@@ -72,7 +65,8 @@ function Register() {
 									className="input w-full"
 									placeholder="john doe"
 									value={name}
-									onChange={handleChangeName}
+									onChange={(e) => setName(e.target.value)}
+									required
 								/>
 							</fieldset>
 
@@ -86,7 +80,8 @@ function Register() {
 									className="input w-full"
 									placeholder="you@example.com"
 									value={email}
-									onChange={handleChangeEmail}
+									onChange={(e) => setEmail(e.target.value)}
+									required
 								/>
 							</fieldset>
 
@@ -100,7 +95,8 @@ function Register() {
 									className="input w-full"
 									placeholder="••••••••"
 									value={password}
-									onChange={handleChangePassword}
+									onChange={(e) => setPassword(e.target.value)}
+									required
 								/>
 							</fieldset>
 
@@ -114,7 +110,8 @@ function Register() {
 									className="input w-full"
 									placeholder="••••••••"
 									value={confirmPassword}
-									onChange={handleChangeConfirmPassword}
+									onChange={(e) => setConfirmPassword(e.target.value)}
+									required
 								/>
 							</fieldset>
 
