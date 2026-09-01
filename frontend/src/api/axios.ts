@@ -10,6 +10,9 @@ api.interceptors.response.use(
 	
 	async (error) => {
 		const originalRequest = error.config;
+		if (!originalRequest) {
+ 			return Promise.reject(error);
+ 		}
 
 		const isAccessTokenMissing =
 			error.response?.status === 401 &&

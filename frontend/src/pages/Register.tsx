@@ -25,7 +25,6 @@ function Register() {
 
 		try {
 			const data = await register(name, email, password, confirmPassword);
-			console.log(data);
 			setUser(data.user);
 			toast.success("Account successfully created");
 			navigate("/");

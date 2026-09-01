@@ -19,11 +19,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 	initAuth: async () => {
 		try {
 			const user = await getMe();
-			set({ user });
-			set({ isLoading: false });
+			set({ user, isLoading: false });
 		} catch (error) {
-			set({ user: null });
-			set({ isLoading: false });
+			set({ user: null, isLoading: false });
 		}
 	},
 

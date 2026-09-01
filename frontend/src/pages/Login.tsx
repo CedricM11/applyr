@@ -16,7 +16,6 @@ function Login() {
 		
 		try {
 			const data = await login(email, password);
-			console.log(data);
 			setUser(data.user);
 			toast.success("Logged in successfully")
 			navigate('/');
