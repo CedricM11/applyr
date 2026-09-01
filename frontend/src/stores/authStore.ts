@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { User } from "../types/user";
-import { getMe } from "../api/authApi";
+import { getMe, logout as logoutApi } from "../api/authApi";
 
 interface AuthState {
 	user: User | null;
@@ -8,6 +8,7 @@ interface AuthState {
 	initAuth: () => Promise<void>;
 	setUser: (user: User) => void;
 	clearUser: () => void;
+	logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -33,4 +34,12 @@ export const useAuthStore = create<AuthState>((set) => ({
 	clearUser: () => { 
 		set({ user: null})
 	},
+
+	logout: async () => {
+		try {
+			await logoutApi();
+		} finally {
+			set({ user: null });
+		}
+	}
 }));
