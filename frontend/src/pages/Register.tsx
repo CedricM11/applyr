@@ -1,26 +1,35 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { login } from "../api/authApi";
 import { toast } from "sonner";
+import { register } from "../api/authApi";
 import { useAuthStore } from "../stores/authStore";
 
-function Login() {
+function Register() {
+
+	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
+
 	const navigate = useNavigate();
 	const setUser = useAuthStore((state) => state.setUser);
 
-
+	
 	const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		
+
+		if (password !== confirmPassword) {
+			toast.error("Passwords do not match");
+			return;
+		}
+
 		try {
-			const data = await login(email, password);
+			const data = await register(name, email, password, confirmPassword);
 			setUser(data.user);
-			toast.success("Logged in successfully")
-			navigate('/');
-		} catch(err) {
-			toast.error(err instanceof Error ? err.message : "An unexpected error occurred")	
+			toast.success("Account successfully created");
+			navigate("/");
+		} catch (error) {
+			toast.error(error instanceof Error ? error.message : "An unexpected error occurred");
 		}
 	}
 
@@ -35,15 +44,30 @@ function Login() {
 								<img src="/logo.svg" alt="applyr-logo" className="w-9 h-9 dark:invert"/>
 							</div>
 							<h1 className="text-2xl font-bold">
-								Welcome back
+								Welcome
 							</h1>
 
 							<p className="mt-1 text-sm text-base-content/60">
-								Sign in to continue to your account.
+								Track your applications. Land your next opportunity.
 							</p>
 						</div>
 
-						<form onSubmit={handleSubmit} className="space-y-5">
+						<form onSubmit={handleSubmit} className="space-y-3">
+
+							<fieldset className="fieldset">
+								<legend className="fieldset-legend">
+									Name
+								</legend>
+
+								<input
+									type="text"
+									className="input w-full"
+									placeholder="john doe"
+									value={name}
+									onChange={(e) => setName(e.target.value)}
+									required
+								/>
+							</fieldset>
 
 							<fieldset className="fieldset">
 								<legend className="fieldset-legend">
@@ -56,22 +80,14 @@ function Login() {
 									placeholder="you@example.com"
 									value={email}
 									onChange={(e) => setEmail(e.target.value)}
+									required
 								/>
 							</fieldset>
 
 							<fieldset className="fieldset">
-								<div className="flex items-center justify-between">
-									<legend className="fieldset-legend">
-										Password
-									</legend>
-
-									<button
-										type="button"
-										className="text-xs text-primary hover:underline"
-									>
-										Forgot password?
-									</button>
-								</div>
+								<legend className="fieldset-legend">
+									Password
+								</legend>
 
 								<input
 									type="password"
@@ -79,6 +95,22 @@ function Login() {
 									placeholder="••••••••"
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
+									required
+								/>
+							</fieldset>
+
+							<fieldset className="fieldset">
+								<legend className="fieldset-legend">
+									Confirm Password
+								</legend>
+
+								<input
+									type="password"
+									className="input w-full"
+									placeholder="••••••••"
+									value={confirmPassword}
+									onChange={(e) => setConfirmPassword(e.target.value)}
+									required
 								/>
 							</fieldset>
 
@@ -86,7 +118,7 @@ function Login() {
 								type="submit"
 								className="btn btn-primary w-full mt-2"
 							>
-								Sign in
+								Create an account
 							</button>
 						</form>
 
@@ -95,12 +127,12 @@ function Login() {
 						</div>
 
 						<p className="text-center text-sm text-base-content/60">
-							Don't have an account?{" "}
+							Already have an account?{" "}
 							<Link
-								to="/register"
+								to="/login"
 								className="font-medium text-primary hover:underline"
 							>
-								Create one
+								Login
 							</Link>
 						</p>
 					</div>
@@ -111,4 +143,4 @@ function Login() {
 	);
 }
 
-export default Login;
+export default Register
