@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { useAuthStore } from "../../stores/authStore";
 import { toast } from "sonner";
 import {
@@ -41,17 +41,17 @@ function Sidebar() {
 			{/* Navigation */}
 			<ul className="menu w-full p-4">
 				<li>
-					<Link to="/">
+					<NavLink to="/" className={({ isActive }) => (isActive ? "menu-active" : "")}>
 						<LayoutDashboard size={20} />
 						Dashboard
-					</Link>
+					</NavLink>
 				</li>
 
 				<li>
-					<Link to="/applications">
+					<NavLink to="/applications" className={({ isActive }) => (isActive ? "menu-active" : "")}>
 						<BriefcaseBusiness size={20} />
 						Applications
-					</Link>
+					</NavLink>
 				</li>
 			</ul>
 
