@@ -7,13 +7,13 @@ export const login = async (email: string, password: string) => {
 			email,
 			password
 		});
-	
+
 		return response.data;
 	} catch (error) {
 
 		if (isAxiosError(error)) {
 			const message = error.response?.data?.message ?? "An unexpected error occurred";
-			throw new Error(message)
+			throw new Error(message, { cause: error })
 		}
 
 		throw error;
@@ -32,10 +32,10 @@ export const register = async (name: string, email: string, password: string, co
 		return response.data;
 
 	} catch (error) {
-		
+
 		if (isAxiosError(error)) {
 			const message = error.response?.data?.message ?? "An unexpected error occurred";
-			throw new Error(message);
+			throw new Error(message, { cause: error });
 		}
 
 		throw error;
@@ -50,7 +50,7 @@ export const getMe = async () => {
 	} catch (error) {
 		if (isAxiosError(error)) {
 			const message = error.response?.data?.message ?? "An unexpected error occurred";
-			throw new Error(message);
+			throw new Error(message, { cause: error });
 		}
 
 		throw error;
@@ -61,11 +61,11 @@ export const logout = async () => {
 	try {
 		const response = await api.post("/auth/logout");
 		return response.data;
-		
+
 	} catch (error) {
 		if (isAxiosError(error)) {
 			const message = error.response?.data?.message ?? "An unexpected error occurred";
-			throw new Error(message);
+			throw new Error(message, { cause: error });
 		}
 
 		throw error;

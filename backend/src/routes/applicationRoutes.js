@@ -3,6 +3,7 @@ import { authMiddleware } from "../middlewares/authMiddleware.js";
 import {
   getAllApplications,
   getApplicationById,
+  getRecentApplications,
   createApplication,
   updateApplication,
   deleteApplication,
@@ -13,6 +14,7 @@ const router = express.Router();
 router.use(authMiddleware);
 
 router.get("/", getAllApplications);
+router.get("/recents", getRecentApplications);
 router.get("/:id", getApplicationById);
 router.post("/", createApplication);
 router.put("/:id", updateApplication);

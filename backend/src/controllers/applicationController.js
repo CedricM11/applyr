@@ -27,6 +27,16 @@ export const getApplicationById = async (req, res, next) => {
 	}
 };
 
+export const getRecentApplications = async (req, res, next) => {
+	try {
+		const userId = req.user.userId;
+		const recentApplications = await applicationService.getRecentApplications(userId);
+		res.status(200).json(recentApplications);
+	} catch (error) {
+		next(error);
+	}
+}
+
 
 export const createApplication = async (req, res, next) => {
 	try {

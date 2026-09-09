@@ -27,6 +27,20 @@ export const getApplicationById = async (applicationId, userId) => {
 	return application;
 }
 
+export const getRecentApplications = async (userId) => {
+	const recentApplications = await prisma.application.findMany({
+		where: {
+			userId
+		},
+		orderBy: {
+			createdAt: "desc"
+		},
+		take: 5
+	});
+
+	return recentApplications;
+}
+
 export const createApplication = async (userId, application) => {
 
 	const applicationData = buildApplicationData(application);
