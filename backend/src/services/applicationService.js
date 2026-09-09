@@ -41,6 +41,32 @@ export const getRecentApplications = async (userId) => {
 	return recentApplications;
 }
 
+export const getApplicationStats = async (userId) => {
+	const groupedApplications = await prisma.application.groupBy({
+		by: ["status"],
+		where: {
+			userId
+		},
+		_count: {
+			_all: true
+		}
+	});
+
+	const counts = Object.fromEntries(
+		groupedApplications.map(({ status, _count }) => [
+			status,
+			_count._all
+		])
+	);
+
+	return {
+		sent: counts.APPLIED ?? 0,
+		interview: counts.INTERVIEW ?? 0,
+		offer: counts.OFFER ?? 0,
+		rejected: counts.REJECTED ?? 0
+	};
+};
+
 export const createApplication = async (userId, application) => {
 
 	const applicationData = buildApplicationData(application);

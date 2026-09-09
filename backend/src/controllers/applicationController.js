@@ -13,7 +13,6 @@ export const getAllApplications = async (req, res, next) => {
 	}
 };
 
-
 export const getApplicationById = async (req, res, next) => {
 	try {
 		const userId = req.user.userId;
@@ -32,6 +31,16 @@ export const getRecentApplications = async (req, res, next) => {
 		const userId = req.user.userId;
 		const recentApplications = await applicationService.getRecentApplications(userId);
 		res.status(200).json(recentApplications);
+	} catch (error) {
+		next(error);
+	}
+}
+
+export const getApplicationStats = async (req, res, next) => {
+	try {
+		const userId = req.user.userId;
+		const stats = await applicationService.getApplicationStats(userId);
+		res.status(200).json(stats);
 	} catch (error) {
 		next(error);
 	}

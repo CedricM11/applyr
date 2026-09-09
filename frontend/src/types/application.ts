@@ -27,3 +27,10 @@ export interface Application {
 	createdAt: string;
 	updatedAt: string;
 }
+
+export interface ApplicationStats {
+	sent: number;
+	interview: number;
+	offer: number;
+	rejected: number;
+}

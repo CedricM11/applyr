@@ -7,6 +7,7 @@ import {
   createApplication,
   updateApplication,
   deleteApplication,
+  getApplicationStats,
 } from "../controllers/applicationController.js";
 
 const router = express.Router();
@@ -15,6 +16,7 @@ router.use(authMiddleware);
 
 router.get("/", getAllApplications);
 router.get("/recents", getRecentApplications);
+router.get("/stats", getApplicationStats);
 router.get("/:id", getApplicationById);
 router.post("/", createApplication);
 router.put("/:id", updateApplication);
