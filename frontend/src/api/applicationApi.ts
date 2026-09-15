@@ -67,3 +67,15 @@ export const updateApplication = async (applicationForm: ApplicationForm, applic
 		throw error;
 	}
 }
+
+export const deleteApplication = async (applicationId: string): Promise<void> => {
+	try {
+		await api.delete(`/application/${applicationId}`);
+	} catch (error) {
+		if (isAxiosError(error)) {
+			const message = error.response?.data?.message ?? "An unexpected error occurred";
+			throw new Error(message, { cause: error });
+		}
+		throw error;
+	}
+}

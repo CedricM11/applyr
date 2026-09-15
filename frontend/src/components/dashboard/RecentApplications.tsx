@@ -1,5 +1,5 @@
 import { MapPin, Trash2, SquarePen } from "lucide-react";
-import { getRecentApplications } from "../../api/applicationApi";
+import { getRecentApplications, deleteApplication } from "../../api/applicationApi";
 import { useEffect, useState } from "react";
 import type { Application } from "../../types/application";
 import { toast } from "sonner";
@@ -17,6 +17,7 @@ function RecentApplications() {
 	};
 
 	const [recentApplications, setRecentApplications] = useState<Application[]>([]);
+	const [applicationToDelete, setApplicationToDelete] = useState<Application | null>(null);
 
 	useEffect(() => {
 		const fetchRecentApplications = async () => {
@@ -30,6 +31,24 @@ function RecentApplications() {
 
 		fetchRecentApplications();
 	}, []);
+
+	const closeDeleteDialog = () => {
+		setApplicationToDelete(null);
+	}
+
+	const handleDelete = async () => {
+		if (!applicationToDelete) return;
+
+		try {
+			await deleteApplication(applicationToDelete.id);
+			const app = await getRecentApplications();
+			setRecentApplications(app);
+			closeDeleteDialog();
+			toast.success("Application deleted successfully");
+		} catch (error) {
+			toast.error(error instanceof Error ? error.message : "An unexpected error occurred");
+		}
+	};
 
 	return (
 		<div className="card bg-base-200 shadow-sm">
@@ -98,7 +117,7 @@ function RecentApplications() {
 												<Link to={`/update/${application.id}`} className="btn btn-ghost btn-sm p-2">
 													<SquarePen size={18} />
 												</Link>
-												<button className="btn btn-ghost btn-sm p-2">
+												<button className="btn btn-ghost btn-sm p-2" onClick={() => setApplicationToDelete(application)}>
 													<Trash2 size={18} color="red"/>
 												</button>
 											</div>
@@ -107,6 +126,37 @@ function RecentApplications() {
 								))}
 							</tbody>
 						</table>
+					</div>
+				)}
+				{applicationToDelete && (
+					<div className="modal modal-open">
+						<div className="modal-box">
+							<h3 className="text-lg font-bold">Delete application</h3>
+							<p className="py-4">Are you sure you want to delete this application?</p>
+
+							<div className="modal-action">
+								<button
+									className="btn btn-error"
+									type="button"
+									onClick={handleDelete}
+								>
+									Delete
+								</button>
+
+								<button
+									className="btn"
+									type="button"
+									onClick={closeDeleteDialog}
+								>
+									Cancel
+								</button>
+							</div>
+						</div>
+
+						<div
+							className="modal-backdrop"
+							onClick={closeDeleteDialog}
+						/>
 					</div>
 				)}
 			</div>
