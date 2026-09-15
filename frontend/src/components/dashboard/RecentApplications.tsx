@@ -1,16 +1,18 @@
-import { EllipsisVertical, MapPin } from "lucide-react";
+import { MapPin, Trash2, SquarePen } from "lucide-react";
 import { getRecentApplications } from "../../api/applicationApi";
 import { useEffect, useState } from "react";
 import type { Application } from "../../types/application";
 import { toast } from "sonner";
+import { Link } from "react-router";
 
 function RecentApplications() {
 
 	const statusClasses: Record<string, string> = {
 		applied: "badge  badge-info",
 		interview: "badge  badge-warning",
+		screening: "badge  badge-warning",
 		rejected: "badge  badge-error",
-		accepted: "badge  badge-success",
+		offer: "badge  badge-success",
 		draft: "badge  badge-ghost",
 	};
 
@@ -22,7 +24,7 @@ function RecentApplications() {
 				const app = await getRecentApplications();
 				setRecentApplications(app);
 			} catch (error) {
-				toast.error(error instanceof Error ? error.message : "An unexpected error occurred")
+				toast.error(error instanceof Error ? error.message : "An unexpected error occurred");
 			}
 		}
 
@@ -56,6 +58,7 @@ function RecentApplications() {
 									<th>Location</th>
 									<th>Date</th>
 									<th>Status</th>
+									<th>Actions</th>
 								</tr>
 							</thead>
 
@@ -91,9 +94,14 @@ function RecentApplications() {
 											</span>
 										</td>
 										<td className="w-12 text-right">
-											<button className="btn btn-ghost btn-circle btn-sm ml-auto">
-											<EllipsisVertical size={18} />
-											</button>
+											<div className="flex items-center">
+												<Link to={`/update/${application.id}`} className="btn btn-ghost btn-sm p-2">
+													<SquarePen size={18} />
+												</Link>
+												<button className="btn btn-ghost btn-sm p-2">
+													<Trash2 size={18} color="red"/>
+												</button>
+											</div>
 										</td>
 									</tr>
 								))}

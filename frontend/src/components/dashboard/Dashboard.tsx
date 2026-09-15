@@ -2,6 +2,7 @@ import RecentApplications from "./RecentApplications";
 import StatApplications from "./StatApplications";
 import { useAuthStore } from "../../stores/authStore";
 import { CirclePlus } from 'lucide-react';
+import { Link } from "react-router";
 
 function Dashboard() {
 	const user = useAuthStore((state) => state.user)
@@ -13,10 +14,10 @@ function Dashboard() {
 					<h1 className="text-2xl font-bold">Hello { user?.name ?? "Guest" } 👋</h1>
 					<p className="mt-1 text-sm text-base-content/60">Here is an overview of your applications</p>
 				</div>
-				<div className="btn btn-primary">
+				<Link to="/new" className="btn btn-primary">
 					<CirclePlus size={16}/>
 					New application
-				</div>
+				</Link>
 			</div>
 			<div className="flex flex-col gap-y-5">
 				<StatApplications />

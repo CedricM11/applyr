@@ -57,7 +57,7 @@ function StatApplications() {
 				const stats = await getApplicationStats();
 				setApplicationStats(stats);
 			} catch (error) {
-				toast.error(error instanceof Error ? error.message : "An unexpected error occurred")
+				toast.error(error instanceof Error ? error.message : "An unexpected error occurred");
 			}
 		}
 

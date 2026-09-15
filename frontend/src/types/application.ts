@@ -28,6 +28,16 @@ export interface Application {
 	updatedAt: string;
 }
 
+export interface ApplicationForm {
+	companyName: string
+	jobTitle: string
+	location: string
+	applicationDate: string
+	applicationSource: string
+	status: string
+	description: string
+}
+
 export interface ApplicationStats {
 	sent: number;
 	interview: number;
