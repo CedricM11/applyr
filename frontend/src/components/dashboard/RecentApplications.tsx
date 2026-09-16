@@ -5,7 +5,11 @@ import type { Application } from "../../types/application";
 import { toast } from "sonner";
 import { Link } from "react-router";
 
-function RecentApplications() {
+type RecentApplicationsProps = {
+	onApplicationDeleted: () => void;
+}
+
+function RecentApplications({ onApplicationDeleted }: RecentApplicationsProps) {
 
 	const statusClasses: Record<string, string> = {
 		applied: "badge  badge-info",
@@ -43,6 +47,7 @@ function RecentApplications() {
 			await deleteApplication(applicationToDelete.id);
 			const app = await getRecentApplications();
 			setRecentApplications(app);
+			onApplicationDeleted();
 			closeDeleteDialog();
 			toast.success("Application deleted successfully");
 		} catch (error) {

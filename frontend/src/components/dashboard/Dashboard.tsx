@@ -3,9 +3,15 @@ import StatApplications from "./StatApplications";
 import { useAuthStore } from "../../stores/authStore";
 import { CirclePlus } from 'lucide-react';
 import { Link } from "react-router";
+import { useState } from "react";
 
 function Dashboard() {
-	const user = useAuthStore((state) => state.user)
+	const user = useAuthStore((state) => state.user);
+	const [statsRefreshKey, setStatsRefreshKey] = useState(0);
+
+	const handleApplicationDeleted = () => {
+		setStatsRefreshKey((value) => value + 1);
+	}
 
 	return (
 		<div className="flex flex-col gap-y-5">
@@ -20,8 +26,8 @@ function Dashboard() {
 				</Link>
 			</div>
 			<div className="flex flex-col gap-y-5">
-				<StatApplications />
-				<RecentApplications />
+				<StatApplications refreshKey={statsRefreshKey} />
+				<RecentApplications onApplicationDeleted={handleApplicationDeleted} />
 			</div>
 		</div>
 	)
