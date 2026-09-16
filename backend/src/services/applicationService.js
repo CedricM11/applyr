@@ -59,8 +59,15 @@ export const getApplicationStats = async (userId) => {
 		])
 	);
 
+	let sent = 0;
+	for (const application of groupedApplications) {
+		if (application.status !== "DRAFT") {
+			sent += application._count._all;
+		}
+	}
+
 	return {
-		sent: counts.APPLIED ?? 0,
+		sent,
 		interview: counts.INTERVIEW ?? 0,
 		offer: counts.OFFER ?? 0,
 		rejected: counts.REJECTED ?? 0
