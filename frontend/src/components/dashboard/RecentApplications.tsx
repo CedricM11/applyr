@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Application } from "../../types/application";
 import { toast } from "sonner";
 import { Link } from "react-router";
+import CompanyLogo from "./CompanyLogo";
 
 type RecentApplicationsProps = {
 	onApplicationDeleted: () => void;
@@ -90,9 +91,12 @@ function RecentApplications({ onApplicationDeleted }: RecentApplicationsProps) {
 								{recentApplications.map((application) => (
 									<tr key={application.id}>
 										<td>
-											<span className="font-medium">
-												{application.companyName}
-											</span>
+											<div className="flex items-center gap-x-4">
+												<CompanyLogo companyName={application.companyName} />
+												<span className="font-medium">
+													{application.companyName}
+												</span>
+											</div>
 										</td>
 
 										<td>
